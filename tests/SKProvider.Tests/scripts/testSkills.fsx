@@ -1,6 +1,8 @@
-namespace SKProvider
+#load "packages.fsx"
 open System
+open System.IO
 open Microsoft.SemanticKernel
+open Microsoft.SemanticKernel.SemanticFunctions
 
 module TemplateParser =    
     type Block = VarBlock of string | FuncBlock of string*string option
@@ -73,22 +75,24 @@ module TemplateParser =
         start [] (templateStr |> Seq.toList)         
         |> List.distinct
 
-// Put any utilities here
-[<AutoOpen>]
-module internal Utilities = 
-    ()
+let kernel = Kernel.Builder.Build()
 
-type KState = {Kernel:IKernel; Context:Orchestration.SKContext}
-type Kerlet = KState -> Async<KState>
+let skillsDir = @"E:\s\repos\semantic-kernel\samples\skills"
 
-module Ops =
-    let (>>=) (a:Kerlet) (b:Kerlet) :Kerlet = 
-        fun ctx -> 
-            async{
-                let! ctx' = a ctx
-                return! (b ctx')
-            }
+let fs = kernel.ImportSemanticFunctionsFromDirectory(skillsDir,"QASkill")
+fs |> Seq.iter (fun kv -> printfn $"{kv.Key}: {kv.Value.Describe()}")
+let allTemplates = Directory.GetFileSystemEntries(skillsDir,"skprompt.txt",EnumerationOptions(RecurseSubdirectories=true))
+allTemplates.Length
 
-// Put the TypeProviderAssemblyAttribute in the runtime DLL, pointing to the design-time DLL
-[<assembly:CompilerServices.TypeProviderAssembly("SKProvider.DesignTime.dll")>]
-do ()
+for t in allTemplates do
+    printfn $"{t}"
+    let tx = File.ReadAllText t
+    let vars = TemplateParser.extractVars tx
+    printfn "%A" vars
+
+
+
+
+
+
+
