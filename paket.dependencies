@@ -8,13 +8,13 @@ nuget Microsoft.NETCore.App
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fsi
 github fsprojects/FSharp.TypeProviders.SDK src/ProvidedTypes.fs
 
-nuget FSharp.Core >= 5.0.1 lowest_matching: true
-nuget Microsoft.SemanticKernel 1.0.0-beta1 copy_local: true
+nuget FSharp.Core >= 7.0.400 lowest_matching: true
+nuget Microsoft.SemanticKernel 1.0.0-beta2
 
 group Test
     source https://api.nuget.org/v3/index.json
 
-    nuget FSharp.Core 5.0.1
+    nuget FSharp.Core 7.0.400
     nuget Microsoft.NET.Test.Sdk
     nuget Microsoft.NETCore.App
     nuget NUnit

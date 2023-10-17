@@ -17,9 +17,12 @@
       <Link>paket-files/ProvidedTypes.fs</Link>
     </Compile>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="..\SKProvider.Runtime\SKProvider.Runtime.fs" />
+    <Compile Include="..\SKProvider\SKProvider.Runtime.fs" />
     <Compile Include="SKProvider.DesignTime.fs" />
     <None Include="paket.references" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SKProvider.Core\SKProvider.Core.fsproj" />
   </ItemGroup>
 
   <Import Project="..\..\.paket\Paket.Restore.targets" />

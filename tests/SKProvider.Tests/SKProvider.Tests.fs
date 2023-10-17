@@ -1,7 +1,8 @@
 module SKProviderTests
 open Microsoft.SemanticKernel
 open SKProvider
-open SKProvider.Ops
+open SKProvider.Core
+open SKProvider.Core.Ops
 open NUnit.Framework
 
 let kstate() = 
@@ -22,7 +23,7 @@ Using:
 
 type T1 = FuncProvider<Template1>
 
-type T2 = FuncProvider< @"E:\s\repos\semantic-kernel\samples\skills",Skills="QASkill">
+type T2 = FuncProvider< @"%SK_SAMPLES_HOME%\samples\skills",Skills="QASkill">
 
 [<Test>]
 let testBase() = 

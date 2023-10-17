@@ -5,13 +5,13 @@ open System.Reflection
 open FSharp.Quotations
 open FSharp.Core.CompilerServices
 open SKProvider
+open SKProvider.Core
 open ProviderImplementation.ProvidedTypes
 
 // Put any utility helpers here
 [<AutoOpen>]
 module internal Helpers =
     open Microsoft.SemanticKernel
-    open Microsoft.SemanticKernel.SemanticFunctions
     open Microsoft.SemanticKernel.Plugins
 
     let ignoreCase = StringComparison.InvariantCultureIgnoreCase
@@ -68,13 +68,13 @@ module internal Helpers =
         
 [<TypeProvider>]
 type SKTypeProvider (config : TypeProviderConfig) as this =
-    inherit TypeProviderForNamespaces (config, assemblyReplacementMap=[("SKProvider.DesignTime", "SKProvider.Runtime")])
+    inherit TypeProviderForNamespaces (config, assemblyReplacementMap=[("SKProvider.DesignTime", "SKProvider")])
 
     let ns = "SKProvider"
     let asm = Assembly.GetExecutingAssembly()
 
     // check we contain a copy of runtime files, and are not referencing the runtime DLL
-    do assert (typeof<KState>.Assembly.GetName().Name = asm.GetName().Name)  
+    do assert (typeof<Utilities.DummyType>.Assembly.GetName().Name = asm.GetName().Name)  
 
     let parseSkillNames str =
         if System.String.IsNullOrWhiteSpace str then 
