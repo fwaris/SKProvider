@@ -27,7 +27,7 @@ module internal Helpers =
             blocks 
             |> List.choose(function 
                 | TemplateParser.VarBlock v -> Some v 
-                | TemplateParser.FuncBlock (_,Some v) when v.StartsWith('$') -> v.Substring(1) |> Some
+                | TemplateParser.FuncBlock (_,Some v) when v.StartsWith("$") -> v.Substring(1) |> Some
                 | _ -> None)
             |> List.distinct
         let fnames = 
@@ -80,7 +80,7 @@ type SKTypeProvider (config : TypeProviderConfig) as this =
         if System.String.IsNullOrWhiteSpace str then 
             []
         else
-            str.Split(',', System.StringSplitOptions.RemoveEmptyEntries) |> Array.toList
+            str.Split([|','|], System.StringSplitOptions.RemoveEmptyEntries) |> Array.toList
 
     let createType typeName (args:obj[]) =
         let template = unbox<string> args.[0]

@@ -1,5 +1,5 @@
-FSharp.Core
+Microsoft.SemanticKernel
 group Test
-NUnit
-NUnit3TestAdapter version_in_path: true
-Microsoft.NET.Test.Sdk
+    NUnit
+    NUnit3TestAdapter version_in_path: true
+    Microsoft.NET.Test.Sdk
