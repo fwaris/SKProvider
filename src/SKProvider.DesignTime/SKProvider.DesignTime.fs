@@ -5,7 +5,6 @@ open System.Reflection
 open FSharp.Quotations
 open FSharp.Core.CompilerServices
 open SKProvider
-open SKProvider.Core
 open ProviderImplementation.ProvidedTypes
 
 // Put any utility helpers here

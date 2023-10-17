@@ -1,8 +1,7 @@
 module SKProviderTests
 open Microsoft.SemanticKernel
 open SKProvider
-open SKProvider.Core
-open SKProvider.Core.Ops
+open SKProvider.Ops
 open NUnit.Framework
 
 let kstate() = 

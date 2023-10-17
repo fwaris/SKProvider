@@ -1,4 +1,4 @@
-﻿namespace SKProvider.Core
+﻿namespace SKProvider
 open System
 open Microsoft.SemanticKernel
 
