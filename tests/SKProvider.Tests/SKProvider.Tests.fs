@@ -22,7 +22,7 @@ Using:
 
 type T1 = FuncProvider<Template1>
 
-type T2 = FuncProvider< @"%SK_SAMPLES_HOME%\samples\skills",Skills="QASkill">
+type T2 = FuncProvider< @"%SK_SAMPLES_HOME%",Skills="QASkill">
 
 [<Test>]
 let testBase() = 
@@ -33,17 +33,15 @@ let testBase() =
 [<Test>]
 let testFolder() = 
     let ks = kstate()
-    let ks' = T2.QASkill_Form(input="this is me", promptName="mega") ks |> Async.RunSynchronously
-    let ks'' = T2.QASkill_QNA() ks' |> Async.RunSynchronously
+    let ks' = T2.QASkill.Form(input="this is me", promptName="mega") ks |> Async.RunSynchronously
+    let ks'' = T2.QASkill.QNA() ks' |> Async.RunSynchronously
     Assert.IsTrue(true)
 
 [<Test>]
 let testBind() = 
     let ks = kstate()
-    let f = T2.QASkill_Form() >>= T2.QASkill_QNA()
+    let f = T2.QASkill.Form() >>= T2.QASkill.QNA()
     let ks' = f ks |> Async.RunSynchronously
     Assert.IsTrue(true)
-
-
 
     

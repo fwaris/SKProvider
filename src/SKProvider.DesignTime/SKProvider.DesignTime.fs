@@ -35,16 +35,17 @@ module internal Helpers =
                 | TemplateParser.FuncBlock (n,_) -> Some n
                 | _ -> None)
             |> List.distinct
-        let vnames = vnames @ ["replaceTemplateWith"]
-        let parms = vnames |> List.map(fun v -> ProvidedParameter(v,typeof<string>,optionalValue=null))
+        let vnamesExt = vnames @ ["template"]
+        let parms = vnamesExt |> List.map(fun v -> ProvidedParameter(v,typeof<string>,optionalValue=null))
         let doc = fun () -> 
-            let fnameStr = String.Join(",",fnames)
-            let vnameStr = String.Join(",",vnames)
-            match vnames,fnames with 
+            let fnameStr = String.Join(", ",fnames)
+            let vnamesDoc = vnames @ ["template (overrides the prompt template)"]
+            let vnameStr = String.Join(", ",vnamesDoc)
+            match vnamesExt,fnames with 
             | [],[] -> "No functions or variable names found"
             | [],_  -> sprintf "Functions: %s" fnameStr
             | _,[]  -> sprintf "Variables: %s" vnameStr
-            | _     -> sprintf "Variables: %s, Functions: %s" fnameStr vnameStr
+            | _     -> sprintf "Variables: %s, Functions: %s" vnameStr fnameStr
         let m = ProvidedMethod(name,parms,typeof<Kerlet>,isStatic=true,invokeCode=invokeTemplate)
         m.AddXmlDocDelayed doc
         m
@@ -52,18 +53,27 @@ module internal Helpers =
     let addTemplate (ty:ProvidedTypeDefinition) template =
         ty.AddMember(buildKerlet "kerlet" template)
 
-    let addSKFunction (ty:ProvidedTypeDefinition) folder (skf:ISKFunction) =         
+    let addNestedType (ty:ProvidedTypeDefinition) (templates:string*(string*string) list) =
+        let n,ts = templates
+        let t1 = ProvidedTypeDefinition(n,Some typeof<obj>, isErased=false)
+        for n,tpml in ts do 
+            let m = buildKerlet n tpml 
+            t1.AddMember(m)
+        ty.AddMember(t1)
+
+    let getTemplate folder (skf:ISKFunction) =
         let path = Path.Combine(folder,skf.PluginName,skf.Name,"skprompt.txt")
-        let template = File.ReadAllText(path)
-        let mName = sprintf "%s_%s" skf.PluginName skf.Name
-        let m = buildKerlet mName template
-        ty.AddMember(m)
-        
+        File.ReadAllText(path)
+
     let addFunctionsFromFolder (ty:ProvidedTypeDefinition) folder skills =
         let k = Kernel.Builder.Build()
         let skills = k.ImportSemanticFunctionsFromDirectory(folder, (Seq.toArray skills) )
         if skills.Count = 0 then failwith "No skills found. Note skills are structured as: parent folder -> 1 or more skills folders -> 1 or more function folders"        
-        skills |> Seq.iter(fun kv -> addSKFunction  ty folder kv.Value)
+        skills 
+        |> Seq.groupBy(fun kv -> kv.Value.PluginName)
+        |> Seq.iter(fun (k,kvs) -> 
+            let ts = kvs |> Seq.map (fun kv -> kv.Value.Name, getTemplate folder kv.Value) |> Seq.toList
+            addNestedType ty (k,ts))
         
 [<TypeProvider>]
 type SKTypeProvider (config : TypeProviderConfig) as this =
