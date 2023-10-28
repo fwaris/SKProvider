@@ -1,7 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+    <IsPackable>false</IsPackable>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateProgramFile>false</GenerateProgramFile>  
+   <Tailcalls>true</Tailcalls>
+   <OtherFlags>$(OtherFlags) --warnon:1182 --nowarn:44</OtherFlags>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="SKProvider.Tests.fs" />

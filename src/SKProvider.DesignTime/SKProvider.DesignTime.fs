@@ -6,21 +6,64 @@ open FSharp.Quotations
 open FSharp.Core.CompilerServices
 open SKProvider
 open ProviderImplementation.ProvidedTypes
+open Microsoft.SemanticKernel
+open FSharp.Quotations.Patterns
+//open Microsoft.SemanticKernel.Connectors.AI.OpenAI
 
 // Put any utility helpers here
 [<AutoOpen>]
-module internal Helpers =
-    open Microsoft.SemanticKernel
-    open Microsoft.SemanticKernel.Plugins
+module internal Helpers =    
+    type ImportedFunction = {Folder:string; Skill:string; FunctionName:string}
 
-    let ignoreCase = StringComparison.InvariantCultureIgnoreCase
+    let namedValue  = function
+        ValueWithName (value,ty,name) -> name, string value
+        | x                           -> failwith $"Unrecognized pattern %A{x}"
 
-    let invokeTemplate (args:Expr list) : Expr =
+    let namedValues (args:Expr list) = args |> List.map namedValue
+
+    let ensureImportedFunction (k:IKernel) (fn:ImportedFunction) = 
+        match k.Functions.TryGetFunction(fn.FunctionName) with
+        | true,_ -> ()
+        | _      -> k.ImportSemanticFunctionsFromDirectory(fn.Folder,fn.Skill) |> ignore    
+
+    // let defaultConfig() = 
+    //     OpenAIRequestSettings(MaxTokens=200, Temperature=0.0)    
+
+
+    let ensureFunction (k:IKernel) name template =
+        match k.Functions.TryGetFunction(name) with
+        | true,fn -> fn
+        | _      -> k.CreateSemanticFunction(template,functionName=name)
+
+    let invokeFunction name template (args:Expr list) : Expr =
         <@@
-            fun ks -> async{return ks}
+            fun (ks:KState) -> 
+                async {
+                    let func = ensureFunction ks.Kernel name template
+                    let nameVals = namedValues args       //let nvs = args |> List.collect (function String s -> )                                                        
+                    for (n,v) in nameVals do
+                        ks.Context.Variables.Add(n,v)                
+                    let! fctx = func.InvokeAsync(ks.Context) |> Async.AwaitTask                
+                    return ks        
+                }           
         @@>
 
-    let buildKerlet name promptTemplate = 
+    let invokeLoadedFunction (fn:ImportedFunction) (args:Expr list) : Expr =
+        <@@     
+            fun (ks:KState) -> 
+                async {
+                    ensureImportedFunction ks.Kernel fn
+                    let nameVals = namedValues args       //let nvs = args |> List.collect (function String s -> )                                                        
+                    for (n,v) in nameVals do
+                        ks.Context.Variables.Add(n,v)
+                    let func = ks.Kernel.Functions.GetFunction(fn.FunctionName)
+                    let! fctx = func.InvokeAsync(ks.Context) |> Async.AwaitTask
+                    return ks
+                }            
+        @@>
+
+
+    let buildKerlet name promptTemplate invokeCode = 
         let blocks = TemplateParser.extractVars promptTemplate
         let vnames = 
             blocks 
@@ -46,18 +89,21 @@ module internal Helpers =
             | [],_  -> sprintf "Functions: %s" fnameStr
             | _,[]  -> sprintf "Variables: %s" vnameStr
             | _     -> sprintf "Variables: %s, Functions: %s" vnameStr fnameStr
-        let m = ProvidedMethod(name,parms,typeof<Kerlet>,isStatic=true,invokeCode=invokeTemplate)
+        let m = ProvidedMethod(name,parms,typeof<Kerlet>,isStatic=true,invokeCode=invokeCode)
         m.AddXmlDocDelayed doc
         m
 
-    let addTemplate (ty:ProvidedTypeDefinition) template =
-        ty.AddMember(buildKerlet "kerlet" template)
+    let buildKerletFromImportedFunc (fn:ImportedFunction) template =
+        buildKerlet fn.FunctionName template (invokeLoadedFunction fn)
 
-    let addNestedType (ty:ProvidedTypeDefinition) (templates:string*(string*string) list) =
+    let addTemplate (ty:ProvidedTypeDefinition) template =
+        ty.AddMember(buildKerlet "kerlet" template (invokeFunction ty.Name template))
+
+    let addNestedType  (ty:ProvidedTypeDefinition) (templates:string*(ImportedFunction*string) list) =
         let n,ts = templates
         let t1 = ProvidedTypeDefinition(n,Some typeof<obj>, isErased=false)
         for n,tpml in ts do 
-            let m = buildKerlet n tpml 
+            let m = buildKerletFromImportedFunc n tpml 
             t1.AddMember(m)
         ty.AddMember(t1)
 
@@ -72,8 +118,15 @@ module internal Helpers =
         skills 
         |> Seq.groupBy(fun kv -> kv.Value.PluginName)
         |> Seq.iter(fun (k,kvs) -> 
-            let ts = kvs |> Seq.map (fun kv -> kv.Value.Name, getTemplate folder kv.Value) |> Seq.toList
+            let ts = 
+                kvs 
+                |> Seq.map (fun kv -> 
+                    let fn = {FunctionName=kv.Value.Name; Skill=kv.Value.PluginName; Folder=folder}
+                    let template =  getTemplate folder kv.Value
+                    fn,template)
+                |> Seq.toList
             addNestedType ty (k,ts))
+
         
 [<TypeProvider>]
 type SKTypeProvider (config : TypeProviderConfig) as this =
@@ -83,8 +136,6 @@ type SKTypeProvider (config : TypeProviderConfig) as this =
     let asm = Assembly.GetExecutingAssembly()
 
     // check we contain a copy of runtime files, and are not referencing the runtime DLL
-    do assert (typeof<Utilities.DummyType>.Assembly.GetName().Name = asm.GetName().Name)  
-
     let parseSkillNames str =
         if System.String.IsNullOrWhiteSpace str then 
             []

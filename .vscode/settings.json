@@ -9,5 +9,6 @@
     "FSharp.inlineValues.enabled": false,
     "FSharp.enableAdaptiveLspServer": true,
     "FSharp.fsac.gc.conserveMemory": 1,
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "dotnet.defaultSolution": "disable"
 }

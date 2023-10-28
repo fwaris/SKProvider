@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{63297B
 		paket.dependencies = paket.dependencies
 	EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SKProvider.Core", "src\SKProvider.Core\SKProvider.Core.fsproj", "{CD863689-DB8F-4F66-AE49-18E5BBFABBEE}"
+EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SKProvider", "src\SKProvider\SKProvider.fsproj", "{BE416818-CC26-4AD8-8335-5CC6563FF3D8}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SKProvider.DesignTime", "src\SKProvider.DesignTime\SKProvider.DesignTime.fsproj", "{4508FD85-CFE2-4A49-BE11-C21432BFD501}"
@@ -14,8 +16,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{ED8079DD-2B06-4030-9F0F-DC548F98E1C4}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "SKProvider.Tests", "tests\SKProvider.Tests\SKProvider.Tests.fsproj", "{4420A809-BB88-4B34-BDE6-FE77B88A7213}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SKProvider.Core", "SKProvider.Core\SKProvider.Core.fsproj", "{CD863689-DB8F-4F66-AE49-18E5BBFABBEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

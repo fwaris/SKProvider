@@ -1,5 +1,5 @@
 #r "nuget: Microsoft.SemanticKernel, 1.0.0-beta1"
-#r "nuget: SKProvider.Runtime"
+#r "nuget: SKProvider"
 open Microsoft.SemanticKernel
 open SKProvider
 open SKProvider.Ops

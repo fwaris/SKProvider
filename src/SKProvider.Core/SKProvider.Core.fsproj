@@ -8,5 +8,5 @@
     <None Include="paket.references" />
     <Compile Include="SKProviderCore.fs" />
   </ItemGroup>
-  <Import Project="..\.paket\Paket.Restore.targets" />
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
