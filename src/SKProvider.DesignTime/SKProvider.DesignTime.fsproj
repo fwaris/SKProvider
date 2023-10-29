@@ -6,6 +6,7 @@
     <!-- This allows the component to execute from 'bin' directory during build -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Tailcalls>true</Tailcalls>
+    <OutputPath>..\SKProvider\bin\$(Configuration)</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fsi">
@@ -17,6 +18,9 @@
       <Link>paket-files/ProvidedTypes.fs</Link>
     </Compile>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="..\SKProvider\RuntimeHelper.fs">
+      <Link>RuntimeHelper.fs</Link>
+    </Compile>
     <Compile Include="SKProvider.DesignTime.fs" />
     <None Include="paket.references" />
   </ItemGroup>
