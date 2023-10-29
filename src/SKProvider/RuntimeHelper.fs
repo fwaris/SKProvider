@@ -15,7 +15,6 @@ type ImportedFunction = {Folder:string; Skill:string; FunctionName:string}//open
 [<AutoOpen>]
 module internal Helpers =    
 
-
     let namedValue (ex:Expr) =
         match ex with 
         | Var v -> v.Name, Expr.Cast<string>(ex)
@@ -53,15 +52,15 @@ module internal Helpers =
                 }           
         @>.Raw
 
-    let invokeLoadedFunction (fn:ImportedFunction) (args:Expr list) : Expr =
-        let names,exps = namedValues args           
-        let funcName = <@ fn.FunctionName @>
+    let invokeLoadedFunction (importedFunc:ImportedFunction) (args:Expr list) : Expr =
+        let names,exps = namedValues args          
+        let funcVar = Expr.Cast<ImportedFunction> (Expr.Var(Var("importedFunc", typeof<ImportedFunction>)))
         <@     
             fun (ks:KState) -> 
                 async {
-                    ensureImportedFunction ks.Kernel fn
+                    ensureImportedFunction ks.Kernel %funcVar
                     setContext ks.Context names %exps
-                    let func = ks.Kernel.Functions.GetFunction(%funcName)
+                    let func = ks.Kernel.Functions.GetFunction((%funcVar).FunctionName)
                     let! fctx = func.InvokeAsync(ks.Context) |> Async.AwaitTask
                     return ks
                 }            
