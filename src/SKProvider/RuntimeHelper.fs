@@ -9,6 +9,7 @@ open ProviderImplementation.ProvidedTypes
 open Microsoft.SemanticKernel
 open FSharp.Quotations.Patterns
 open Microsoft.SemanticKernel.Orchestration
+open FSharp.Reflection
 
 type ImportedFunction = {Folder:string; Skill:string; FunctionName:string}//open Microsoft.SemanticKernel.Connectors.AI.OpenAI
 // Put any utility helpers here
@@ -52,15 +53,14 @@ module internal Helpers =
                 }           
         @>.Raw
 
-    let invokeLoadedFunction (importedFunc:ImportedFunction) (args:Expr list) : Expr =
+    let invokeLoadedFunction (funcBind:Expr<ImportedFunction>) (args:Expr list) : Expr =
         let names,exps = namedValues args          
-        let funcVar = Expr.Cast<ImportedFunction> (Expr.Var(Var("importedFunc", typeof<ImportedFunction>)))
         <@     
             fun (ks:KState) -> 
                 async {
-                    ensureImportedFunction ks.Kernel %funcVar
+                    ensureImportedFunction ks.Kernel %funcBind
                     setContext ks.Context names %exps
-                    let func = ks.Kernel.Functions.GetFunction((%funcVar).FunctionName)
+                    let func = ks.Kernel.Functions.GetFunction((%funcBind).FunctionName)
                     let! fctx = func.InvokeAsync(ks.Context) |> Async.AwaitTask
                     return ks
                 }            
@@ -97,8 +97,30 @@ module internal Helpers =
         m.AddXmlDocDelayed doc
         m
 
+    ///taken from SQLProvider 
+    let rec coerceValues fieldTypeLookup fields = 
+        Array.mapi (fun i v ->
+                let expr = 
+                    if isNull v then simpleTypeExpr v
+                    elif FSharpType.IsRecord (v.GetType()) then recordExpr v |> snd
+                    else simpleTypeExpr v
+                Expr.Coerce(expr, fieldTypeLookup i)
+        ) fields |> List.ofArray
+        
+    and simpleTypeExpr instance = Expr.Value(instance)
+
+    and recordExpr instance = 
+        let tpy = instance.GetType()
+        let fields = FSharpValue.GetRecordFields(instance)
+        let fieldInfo = FSharpType.GetRecordFields(tpy)
+        let fieldTypeLookup indx = fieldInfo.[indx].PropertyType
+        tpy, Expr.NewRecord(instance.GetType(), coerceValues fieldTypeLookup fields)
+
+
     let buildKerletFromImportedFunc (fn:ImportedFunction) template =
-        buildKerlet fn.FunctionName template (invokeLoadedFunction fn)
+        let _,recExp = recordExpr fn
+        let vExp = recExp |> Expr.Cast<ImportedFunction>
+        buildKerlet fn.FunctionName template (invokeLoadedFunction vExp)
 
     let addTemplate (ty:ProvidedTypeDefinition) template =
         ty.AddMember(buildKerlet "kerlet" template (invokeFunction ty.Name template))
