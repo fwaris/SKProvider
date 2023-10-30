@@ -6,7 +6,7 @@
     <!-- This allows the component to execute from 'bin' directory during build -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Tailcalls>true</Tailcalls>
-    <OutputPath>..\SKProvider\bin\$(Configuration)</OutputPath>
+    <OutputPath>..\SKProvider\bin\$(Configuration)/typeproviders/fsharp41</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fsi">
