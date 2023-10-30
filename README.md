@@ -1,7 +1,27 @@
+# SKProvider
 
-This is a simple F# type provider.  It has separate design-time and runtime assemblies.
+Enables typed representations of Semantic Kernel prompts. E.g.:
 
-Paket is used to acquire the type provider SDK and build the nuget package (you can remove this use of paket if you like)
+```F#
+open SKProvider 
+
+[<Literal>]
+let Template1 = """ 
+Summarize:
+{{$input}}
+
+Today is {{timeSkill.Now}}
+
+Using:
+{{$context}}
+"""
+
+type T1 = FuncProvider<Template1> //typed prompt template
+...
+let kr = T1.kerlet(context="this is a context", input="this is the input") //bound template
+...
+
+```
 
 Building:
 
@@ -9,4 +29,6 @@ Building:
     dotnet paket update
     dotnet build -c release
 
-    dotnet paket pack nuget --version 0.0.1
+    dotnet pack SKProvider.sln -o nuget -c Release -p:Version=1.0.0.1
+
+    

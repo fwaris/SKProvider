@@ -6,9 +6,14 @@
     <FSharpToolsDirectory>typeproviders</FSharpToolsDirectory>
     <PackagePath>typeproviders</PackagePath>
     <Tailcalls>true</Tailcalls>
+  	<Authors>Faisal Waris</Authors>
+	<Description></Description>
+	<Copyright>Copyright © 2023</Copyright>
+	<PackageProjectUrl>https://github.com/fwaris/SKProvider</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/fwaris/SKProvider</RepositoryUrl>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
-    <!-- <Compile Include="AssemblyInfo.fs" /> -->
     <Compile Include="RuntimeHelper.fs" />
     <Compile Include="Runtime.fs" />
     <None Include="paket.references" />

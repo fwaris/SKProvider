@@ -1,5 +1,4 @@
-#r "nuget: Microsoft.SemanticKernel, 1.0.0-beta1"
-#r "nuget: SKProvider"
+#load "packages.fsx"
 open Microsoft.SemanticKernel
 open SKProvider
 open SKProvider.Ops
