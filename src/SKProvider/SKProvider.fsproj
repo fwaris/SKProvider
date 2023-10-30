@@ -8,7 +8,7 @@
     <Tailcalls>true</Tailcalls>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
+    <!-- <Compile Include="AssemblyInfo.fs" /> -->
     <Compile Include="RuntimeHelper.fs" />
     <Compile Include="Runtime.fs" />
     <None Include="paket.references" />

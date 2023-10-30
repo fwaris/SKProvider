@@ -7,6 +7,7 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Tailcalls>true</Tailcalls>
     <OutputPath>..\SKProvider\bin\$(Configuration)/typeproviders/fsharp41</OutputPath>
+   <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\..\paket-files\fsprojects\FSharp.TypeProviders.SDK\src\ProvidedTypes.fsi">
@@ -17,7 +18,7 @@
       <Paket>True</Paket>
       <Link>paket-files/ProvidedTypes.fs</Link>
     </Compile>
-    <Compile Include="AssemblyInfo.fs" />
+    <!-- <Compile Include="AssemblyInfo.fs" /> -->
     <Compile Include="..\SKProvider\RuntimeHelper.fs">
       <Link>RuntimeHelper.fs</Link>
     </Compile>
