@@ -1,19 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsPackable>false</IsPackable>
+   <GenerateProgramFile>false</GenerateProgramFile>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <!-- <TreatWarningsAsErrors>true</TreatWarningsAsErrors> -->
-    <GenerateProgramFile>false</GenerateProgramFile>  
-   <Tailcalls>true</Tailcalls>
-   <OtherFlags>$(OtherFlags) --warnon:1182 --nowarn:44</OtherFlags>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="SKProvider.Tests.fs" />
     <None Include="paket.references" />
-	<None Include="scripts/packages.fsx" />
-	<None Include="scripts/test.fsx" />
+    <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\SKProvider\SKProvider.fsproj" />

@@ -1,5 +1,4 @@
-#load "packages.fsx"
-open Microsoft.SemanticKernel
+﻿open Microsoft.SemanticKernel
 open SKProvider
 open SKProvider.Ops
 

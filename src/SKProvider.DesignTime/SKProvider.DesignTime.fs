@@ -32,9 +32,9 @@ type SKTypeProvider (config : TypeProviderConfig) as this =
 
         let folder = Environment.ExpandEnvironmentVariables(template)
         if Directory.Exists(folder) then 
-            SKProviderRuntime.Helpers.addFunctionsFromFolder myType folder skills
+            Generator.addFunctionsFromFolder myType folder skills
         else
-            SKProviderRuntime.Helpers.addTemplate myType template
+            Generator.addTemplate myType template
 
         asm.AddTypes [ myType ]
 

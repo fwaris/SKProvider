@@ -1,0 +1,5 @@
+group Test
+    Microsoft.SemanticKernel
+    NUnit
+    NUnit3TestAdapter version_in_path: true
+    Microsoft.NET.Test.Sdk
