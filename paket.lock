@@ -20,13 +20,13 @@ NUGET
       Microsoft.NETCore.DotNetAppHost (>= 7.0.13)
     Microsoft.NETCore.Platforms (7.0.4) - restriction: || (== net6.0) (== net7.0) (&& (== netstandard2.0) (>= netcoreapp2.2))
     Microsoft.NETCore.Targets (5.0) - restriction: || (== net6.0) (== net7.0) (&& (== netstandard2.0) (>= netcoreapp2.2))
-    Microsoft.SemanticKernel.Abstractions (1.0.0-beta3) - copy_local: true
+    Microsoft.SemanticKernel.Abstractions (1.0.0-beta4) - copy_local: true
       Microsoft.Bcl.AsyncInterfaces (>= 6.0)
       Microsoft.Bcl.HashCode (>= 1.1)
       Microsoft.Extensions.Logging.Abstractions (>= 6.0.4)
       System.Text.Json (>= 6.0.8)
-    Microsoft.SemanticKernel.Core (1.0.0-beta3) - copy_local: true
-      Microsoft.SemanticKernel.Abstractions (>= 1.0.0-beta3)
+    Microsoft.SemanticKernel.Core (1.0.0-beta4) - copy_local: true
+      Microsoft.SemanticKernel.Abstractions (>= 1.0.0-beta4)
       System.Diagnostics.DiagnosticSource (>= 6.0.1)
     NETStandard.Library (2.0.3) - restriction: || (== net6.0) (== net7.0) (&& (== netstandard2.0) (>= netcoreapp2.2))
       Microsoft.NETCore.Platforms (>= 1.1)
@@ -103,43 +103,43 @@ NUGET
       Microsoft.NETCore.DotNetAppHost (>= 7.0.13)
     Microsoft.NETCore.Platforms (7.0.4) - restriction: >= netcoreapp2.2
     Microsoft.NETCore.Targets (5.0) - restriction: >= netcoreapp2.2
-    Microsoft.SemanticKernel (1.0.0-beta3)
-      Microsoft.SemanticKernel.Connectors.AI.OpenAI (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Core (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Planners.Core (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Plugins.Core (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Plugins.Memory (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Reliability.Basic (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.TemplateEngine.Basic (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-    Microsoft.SemanticKernel.Abstractions (1.0.0-beta3) - restriction: >= netstandard2.0
+    Microsoft.SemanticKernel (1.0.0-beta4)
+      Microsoft.SemanticKernel.Connectors.AI.OpenAI (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Core (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Planners.Core (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Plugins.Core (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Plugins.Memory (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Reliability.Basic (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.TemplateEngine.Basic (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+    Microsoft.SemanticKernel.Abstractions (1.0.0-beta4) - restriction: >= netstandard2.0
       Microsoft.Bcl.AsyncInterfaces (>= 6.0) - restriction: >= netstandard2.0
       Microsoft.Bcl.HashCode (>= 1.1) - restriction: >= netstandard2.0
       Microsoft.Extensions.Logging.Abstractions (>= 6.0.4) - restriction: >= netstandard2.0
       System.Text.Json (>= 6.0.8) - restriction: >= netstandard2.0
-    Microsoft.SemanticKernel.Connectors.AI.OpenAI (1.0.0-beta3) - restriction: >= netstandard2.0
+    Microsoft.SemanticKernel.Connectors.AI.OpenAI (1.0.0-beta4) - restriction: >= netstandard2.0
       Azure.AI.OpenAI (>= 1.0.0-beta.8) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Core (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Plugins.Memory (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-    Microsoft.SemanticKernel.Core (1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Abstractions (>= 1.0.0-beta3) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Core (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Plugins.Memory (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+    Microsoft.SemanticKernel.Core (1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Abstractions (>= 1.0.0-beta4) - restriction: >= netstandard2.0
       System.Diagnostics.DiagnosticSource (>= 6.0.1) - restriction: >= netstandard2.0
-    Microsoft.SemanticKernel.Planners.Core (1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Abstractions (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Core (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.TemplateEngine.Basic (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-    Microsoft.SemanticKernel.Plugins.Core (1.0.0-beta3) - restriction: >= netstandard2.0
+    Microsoft.SemanticKernel.Planners.Core (1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Abstractions (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Core (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.TemplateEngine.Basic (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+    Microsoft.SemanticKernel.Plugins.Core (1.0.0-beta4) - restriction: >= netstandard2.0
       Microsoft.Bcl.TimeProvider (>= 8.0.0-rc.2.23479.6) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Core (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-    Microsoft.SemanticKernel.Plugins.Memory (1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Abstractions (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Core (>= 1.0.0-beta3) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Core (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+    Microsoft.SemanticKernel.Plugins.Memory (1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Abstractions (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Core (>= 1.0.0-beta4) - restriction: >= netstandard2.0
       System.Numerics.Tensors (>= 8.0.0-rc.2.23479.6) - restriction: >= netstandard2.0
       System.Text.Json (>= 6.0.8) - restriction: >= netstandard2.0
-    Microsoft.SemanticKernel.Reliability.Basic (1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Abstractions (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Core (>= 1.0.0-beta3) - restriction: >= netstandard2.0
-    Microsoft.SemanticKernel.TemplateEngine.Basic (1.0.0-beta3) - restriction: >= netstandard2.0
-      Microsoft.SemanticKernel.Abstractions (>= 1.0.0-beta3) - restriction: >= netstandard2.0
+    Microsoft.SemanticKernel.Reliability.Basic (1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Abstractions (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Core (>= 1.0.0-beta4) - restriction: >= netstandard2.0
+    Microsoft.SemanticKernel.TemplateEngine.Basic (1.0.0-beta4) - restriction: >= netstandard2.0
+      Microsoft.SemanticKernel.Abstractions (>= 1.0.0-beta4) - restriction: >= netstandard2.0
     Microsoft.TestPlatform.ObjectModel (17.7.2) - restriction: >= netcoreapp3.1
       NuGet.Frameworks (>= 6.5) - restriction: || (>= net462) (>= netstandard2.0)
       System.Reflection.Metadata (>= 1.6) - restriction: || (>= net462) (>= netstandard2.0)

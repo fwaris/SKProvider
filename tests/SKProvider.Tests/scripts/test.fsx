@@ -1,32 +1,61 @@
 #load "packages.fsx"
+open System
 open Microsoft.SemanticKernel
+open Microsoft.SemanticKernel.Plugins.Core
+open Microsoft.SemanticKernel.Plugins.Document
+open Microsoft.SemanticKernel.Plugins.Document.OpenXml
 open SKProvider
 open SKProvider.Ops
+open Microsoft.Extensions.Logging
+
+let logger = 
+    {new ILogger with
+            member this.BeginScope(state) = raise (System.NotImplementedException())
+            member this.IsEnabled(logLevel) = true
+            member this.Log(logLevel, eventId, state, ``exception``, formatter) = 
+                let msg = formatter.Invoke(state,``exception``)
+                printfn "Kernel: %s" msg
+    }
+
+let loggerFactory = 
+    {new ILoggerFactory with
+            member this.AddProvider(provider) = ()
+            member this.CreateLogger(categoryName) = logger
+            member this.Dispose() = ()
+    }
 
 let kstate() = 
-    let kernel = Kernel.Builder.Build()
+    let kernel = 
+        (KernelBuilder())
+            .WithOpenAIChatCompletionService("gpt-3.5-turbo",Environment.GetEnvironmentVariable("OPENAI_API_KEY"))
+            .WithLoggerFactory(loggerFactory)
+            .Build()
+    let fns = kernel.ImportFunctions(TimePlugin(),"timePlugin")
+    let fns2 = kernel.ImportFunctions(DocumentPlugin(WordDocumentConnector(),FileSystem.LocalFileSystemConnector()),"documentPlugin")
+    //let fns3 = kernel.ImportSemanticFunctionsFromDirectory( Environment.ExpandEnvironmentVariables("%SK_SAMPLES_HOME%"),"SummarizeSkill")
+    //let m1 = fns3.["Summarize"]    
     let ctx = kernel.CreateNewContext()
+    
     {Kernel=kernel; Context=ctx}
 
-[<Literal>]
-let Template1 = """
-Summarize:
-{{$input}}
+let fnDoc = @"C:\Users\Faisa\OneDrive\Documents\FsTsetlinPaper.docx"
 
-Today is {{timeSkill.Now}}
+let fn = DocumentPlugin(WordDocumentConnector(),FileSystem.LocalFileSystemConnector())
+let dc1 = fn.ReadTextAsync(fnDoc) |> Async.AwaitTask |> Async.RunSynchronously
 
-Using:
-{{$context}}
-"""
+type ReadDoc = FuncProvider<"{{documentPlugin.ReadText $doc}}">
+type SummSkill = FuncProvider< @"%SK_SAMPLES_HOME%",Skills="SummarizeSkill">
 
-type T1 = FuncProvider<Template1>
+let rs0 = kstate() |> ReadDoc.kerlet(doc=fnDoc) |> Async.RunSynchronously
+rs0.Context.Variables.["input"]
+let rs2 = rs0 |> SummSkill.SummarizeSkill.Summarize(input=rs0.Context.Result) |> Async.RunSynchronously
 
-type T2 = FuncProvider< @"E:\s\repos\semantic-kernel\samples\skills",Skills="QASkill">
+let plan =
+    ReadDoc.kerlet(doc=fnDoc)
+    >>= SummSkill.SummarizeSkill.Summarize()
 
-let k1 = T1.kerlet(context="Some context", input="some input") 
-let ks = kstate()
-let rs1 = k1 ks |> Async.RunSynchronously
-
+let rs1 = kstate() |> plan |> Async.RunSynchronously
+rs1.Context.Result
 (*
 debugging - open visual studio dev command prompt in elevate mode
 cd C:\Users\Faisa\source\repos\SKProvider\tests\SKProvider.Tests\scripts 

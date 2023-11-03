@@ -39,5 +39,5 @@ module RuntimeHelper  =
 
     let setContext (ctx:SKContext) varNames varVals = 
         List.zip varNames varVals 
-        |> List.iter (fun (n,v) -> ctx.Variables.Add(n,v))
+        |> List.iter (fun (n,v) -> ctx.Variables.Set(n,v))
 

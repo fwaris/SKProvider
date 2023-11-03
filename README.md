@@ -31,4 +31,6 @@ Building:
 
     dotnet pack SKProvider.sln -o nuget -c Release -p:Version=1.0.0.1
 
-    
+During development, may need to clear nuget cache often (especially when working with scripts):
+
+    dotnet fsi .\tests\SKProvider.Tests\scripts\ClearNugetCache.fsx

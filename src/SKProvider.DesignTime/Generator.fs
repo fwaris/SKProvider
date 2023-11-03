@@ -30,7 +30,9 @@ module internal Generator =
                 async {
                     SKProviderRuntime.RuntimeHelper.ensureImportedFunction ks.Kernel %funcBind
                     SKProviderRuntime.RuntimeHelper.setContext ks.Context names %exps
-                    let func = ks.Kernel.Functions.GetFunction((%funcBind).FunctionName)
+                    let pluginName = (%funcBind).Skill
+                    let funcName = (%funcBind).FunctionName                    
+                    let func = ks.Kernel.Functions.GetFunction(pluginName,funcName)
                     let! fctx = func.InvokeAsync(ks.Context) |> Async.AwaitTask
                     return ks
                 }            
@@ -108,7 +110,7 @@ module internal Generator =
         File.ReadAllText(path)
 
     let addFunctionsFromFolder (ty:ProvidedTypeDefinition) folder skills =
-        let k = Kernel.Builder.Build()
+        let k = (new KernelBuilder()).Build()
         let skills = k.ImportSemanticFunctionsFromDirectory(folder, (Seq.toArray skills) )
         if skills.Count = 0 then failwith "No skills found. Note skills are structured as: parent folder -> 1 or more skills folders -> 1 or more function folders"        
         skills 
