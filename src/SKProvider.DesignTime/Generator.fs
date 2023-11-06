@@ -17,9 +17,9 @@ module internal Generator =
             fun (ks:KState) -> 
                 async {
                     let func = SKProviderRuntime.RuntimeHelper.ensureFunction ks.Kernel name template  
-                    SKProviderRuntime.RuntimeHelper.setContext ks.Context names %exps
-                    let! fctx = func.InvokeAsync(ks.Context) |> Async.AwaitTask                
-                    return ks        
+                    let ks' = SKProviderRuntime.RuntimeHelper.setContext ks names %exps
+                    let! fctx = func.InvokeAsync(ks'.Kernel,variables=ks'.Context.Variables) |> Async.AwaitTask
+                    return ks'      
                 }           
         @>.Raw
 
@@ -29,12 +29,12 @@ module internal Generator =
             fun (ks:KState) -> 
                 async {
                     SKProviderRuntime.RuntimeHelper.ensureImportedFunction ks.Kernel %funcBind
-                    SKProviderRuntime.RuntimeHelper.setContext ks.Context names %exps
+                    let ks' = SKProviderRuntime.RuntimeHelper.setContext ks names %exps
                     let pluginName = (%funcBind).Skill
                     let funcName = (%funcBind).FunctionName                    
                     let func = ks.Kernel.Functions.GetFunction(pluginName,funcName)
-                    let! fctx = func.InvokeAsync(ks.Context) |> Async.AwaitTask
-                    return ks
+                    let! fctx = func.InvokeAsync(ks'.Kernel,variables=ks'.Context.Variables) |> Async.AwaitTask
+                    return ks'
                 }            
         @>.Raw
 

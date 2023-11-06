@@ -15,6 +15,7 @@ type ImportedFunction = {Folder:string; Skill:string; FunctionName:string}//open
 // Put any utility helpers here
 [<AutoOpen>]
 module RuntimeHelper  =    
+    open Microsoft.Extensions.Logging
 
     let namedValue (ex:Expr) =
         match ex with 
@@ -24,20 +25,24 @@ module RuntimeHelper  =
     let namedValues (args:Expr list) = (([],<@ [] @>),args) ||> List.fold (fun (ns,es) ex -> let n,e =  namedValue ex in (n::ns),<@ %e :: %es @>)
 
     let ensureImportedFunction (k:IKernel) (fn:ImportedFunction) = 
-        match k.Functions.TryGetFunction(fn.FunctionName) with
+        let lgr = k.LoggerFactory.CreateLogger("skprovider")
+        lgr.Log(LogLevel.Information, $"ensure function {fn.Skill}.{fn.FunctionName}")
+        match k.Functions.TryGetFunction(fn.Skill,fn.FunctionName) with
         | true,_ -> ()
-        | _      -> k.ImportSemanticFunctionsFromDirectory(fn.Folder,fn.Skill) |> ignore    
+        | _      -> 
+            lgr.Log(LogLevel.Information,$"function not in kernel. Loading {fn.Skill}.{fn.FunctionName}")
+            k.ImportSemanticFunctionsFromDirectory(fn.Folder,fn.Skill) |> ignore    
 
     // let defaultConfig() = 
     //     OpenAIRequestSettings(MaxTokens=200, Temperature=0.0)    
-
 
     let ensureFunction (k:IKernel) name template =
         match k.Functions.TryGetFunction(name) with
         | true,fn -> fn
         | _      -> k.CreateSemanticFunction(template,functionName=name)
 
-    let setContext (ctx:SKContext) varNames varVals = 
+    let setContext (ks:KState) varNames varVals = 
+        let ctx' = ks.Kernel.CreateNewContext(ks.Context.Variables.Clone())
         List.zip varNames varVals 
-        |> List.iter (fun (n,v) -> ctx.Variables.Set(n,v))
-
+        |> List.iter (fun (n,v) -> ctx'.Variables.Set(n,v))
+        {ks with Context = ctx'}

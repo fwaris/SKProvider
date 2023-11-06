@@ -47,8 +47,11 @@ type ReadDoc = FuncProvider<"{{documentPlugin.ReadText $doc}}">
 type SummSkill = FuncProvider< @"%SK_SAMPLES_HOME%",Skills="SummarizeSkill">
 
 let rs0 = kstate() |> ReadDoc.kerlet(doc=fnDoc) |> Async.RunSynchronously
+rs0.Context.Variables.Input
 rs0.Context.Variables.["input"]
-let rs2 = rs0 |> SummSkill.SummarizeSkill.Summarize(input=rs0.Context.Result) |> Async.RunSynchronously
+rs0.Context.Variables.Keys
+let rs2 = rs0 |> SummSkill.SummarizeSkill.Summarize() |> Async.RunSynchronously
+rs2.Context.Variables.Input
 
 let plan =
     ReadDoc.kerlet(doc=fnDoc)
